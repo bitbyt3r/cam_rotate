@@ -1,2 +1,3 @@
 *.so
 settings.txt
+__pycache__/

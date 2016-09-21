@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>Zoetrope Control</title>
+  </head>
+  <body>
+    <h1>Zoetrope Settings</h1>
+    <form action="/" method="POST">
+      <h3>Maximum crank speed</h3>
+      <input type="number" name="maxspeed" value="{{ data['maxspeed'][0] }}" /><br />
+      <h3>Segments per revolution</h3>
+      <input type="number" name="fpr" value="{{ data['fpr'][0] }}" /><br />
+      <h3>Frames per second</h3>
+      <input type="number" name="fps" value="{{ data['fps'][0] }}" /><br />
+      <h3>Scale</h3>
+      <input type="text" name="scale" value="{{ data['scale'][0] }}" /><br />
+      <h3>Image Center</h3>
+      <input type="text" name="icx" value="{{ data['icx'][0] }}" />
+      <input type="text" name="icy" value="{{ data['icy'][0] }}" /><br />
+      <h3>Screen Center</h3>
+      <input type="text" name="scx" value="{{ data['scx'][0] }}" />
+      <input type="text" name="scy" value="{{ data['scy'][0] }}" /><br />
+      <h3>Show Crosshair</h3>
+      <input type="checkbox" name="check" value="calibrate" {{ "checked" if "calibrate" in data['check'] }} /><br />
+      <h3>Circle crop</h3>
+      <input type="checkbox" name="check" value="circle" {{ "checked" if "circle" in data['check'] }} /><br />
+      <h3>Reverse rotation</h3>
+      <input type="checkbox" name="check" value="reverse" {{ "checked" if "reverse" in data['check'] }} /><br />
+      <input type="submit" />
+    </form>
+  </body>
+</html>

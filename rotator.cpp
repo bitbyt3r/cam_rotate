@@ -9,8 +9,8 @@
 #include "input.h"
 #include <math.h>
 
-#define MAIN_TEXTURE_WIDTH 500
-#define MAIN_TEXTURE_HEIGHT 500
+#define MAIN_TEXTURE_WIDTH 512
+#define MAIN_TEXTURE_HEIGHT 512
 
 char tmpbuff[MAIN_TEXTURE_WIDTH*MAIN_TEXTURE_HEIGHT*4];
 

@@ -1,6 +1,7 @@
 #include <thread>
 #include <stdio.h>
 #include <unistd.h>
+#include "rotator.h"
 
 extern "C"
 {
@@ -10,9 +11,7 @@ extern "C"
             std::thread draw_thread;
 
             void background(void) {
-                while(1 == 1) {
-                    usleep(1000000);
-                }
+                run(&angle);
             }
         public:
             int Init(void) {

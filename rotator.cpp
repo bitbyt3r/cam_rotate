@@ -9,8 +9,8 @@
 #include "input.h"
 #include <math.h>
 
-#define MAIN_TEXTURE_WIDTH 1920
-#define MAIN_TEXTURE_HEIGHT 1080
+#define MAIN_TEXTURE_WIDTH 500
+#define MAIN_TEXTURE_HEIGHT 500
 
 char tmpbuff[MAIN_TEXTURE_WIDTH*MAIN_TEXTURE_HEIGHT*4];
 
@@ -18,7 +18,7 @@ char tmpbuff[MAIN_TEXTURE_WIDTH*MAIN_TEXTURE_HEIGHT*4];
 int run(float *angle)
 {
 	//should the camera convert frame data from yuv to argb automatically?
-	bool do_argb_conversion = false;
+	bool do_argb_conversion = true;
 
 	//init graphics and the camera
 	InitGraphics();
@@ -76,7 +76,7 @@ int run(float *angle)
 		}
 
 		//begin frame, draw the texture then end frame (the bit of maths just fits the image to the screen while maintaining aspect ratio)
-                Input(&c_x, &c_y, &scale, &t_x, &t_y, &speed);
+                //Input(&c_x, &c_y, &scale, &t_x, &t_y, &speed);
 		BeginFrame();
 		float aspect_ratio = float(MAIN_TEXTURE_WIDTH)/float(MAIN_TEXTURE_HEIGHT);
 //		float screen_aspect_ratio = 1920.f/1080.f;
@@ -87,7 +87,8 @@ int run(float *angle)
                 if (speed < -1.f) {
                     speed = -1.f;
                 }
-                rot = fmod((rot + ((6.282 / fps) * speed)), 6.282);
+                //rot = fmod((rot + ((6.282 / fps) * speed)), 6.282);
+                rot = *angle;
 		DrawTextureRect(&textures[0],-aspect_ratio/screen_aspect_ratio+c_x,-1.f+c_y,aspect_ratio/screen_aspect_ratio+c_x,1.f+c_y,t_x,t_y,rot,scale);
 //		DrawTextureRect(&textures[0],1.f,1.f,1.f,1.f,rot);
 		EndFrame();
@@ -103,7 +104,6 @@ int run(float *angle)
                 settings << rot << '\n';
                 settings << fps << '\n';
                 settings.close();
-                printf("Current Angle: %f\n", angle);
 	}
 
 	StopCamera();

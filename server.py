@@ -7,10 +7,8 @@ import threading
 class SpeedServer:
   def __init__(self, callback):
     self.callback = callback
-    addr = socket.getaddrinfo('0.0.0.0', 8080)[0][-1]
-    self.s = socket.socket()
-    self.s.bind(addr)
-    self.s.listen(1)
+    self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    self.s.bind(('0.0.0.0', 8080))
     self.thread = threading.Thread(target=self.run, daemon=True)
     self.thread.start()
     print("Started speed server thread.")
@@ -19,9 +17,8 @@ class SpeedServer:
     print("Running speed server")
     while True:
       try:
-        cl, addr = self.s.accept()
-        num = float(cl.recv(100))
-        cl.close()
+        data, addr = self.s.recvfrom(1024)
+        num = float(data)
         self.callback(num)
       except:
         pass
@@ -29,13 +26,18 @@ class SpeedServer:
 class ConfigServer:
   def __init__(self, callback):
     self.callback = callback
+    self.settings = {}
     try:
       self.settings = self.readsettings("./settings.json")
     except:
-      self.settings = {"icx": ["0.5"], "scy": ["0.5"], "fpr": ["24"], "scale": ["1"], "fps": ["30"], "icy": ["0.5"], "maxspeed": ["50"], "scx": ["0.5"], "check": [""]}
-      self.writeback("./settings.json")
+      pass
+    if not self.settings:
+      self.settings = {"icx": ["0.5",], "scy": ["0.5",], "fpr": ["24",], "scale": ["1",], "fps": ["30",], "icy": ["0.5",], "maxspeed": ["50",], "scx": ["0.5",], "check": ["",]}
+    self.writeback("./settings.json")
+    print("Setting new settings")
+    print(self.settings)
     self.callback(self.settings)
-    self.thread = threading.Thread(target=self.run, daemon=True)
+    self.thread = threading.Thread(target=self.run)
     self.thread.start()
     print("Started config server thread.")
 
@@ -46,7 +48,8 @@ class ConfigServer:
     @app.route("/", methods=['GET', 'POST'])
     def index():
       if request.method == 'POST':
-        self.writeback("./settings.json", values=request.form)
+        self.settings = dict(request.form)
+        self.writeback("./settings.json")
         self.callback(request.form)
       return render_template("index.html", data=self.settings)
 
@@ -56,7 +59,6 @@ class ConfigServer:
     with open(path, "r") as FH:
       return json.loads(FH.read())
 
-  def writeback(self, path, values={}):
-    self.settings.update(values)
+  def writeback(self, path):
     with open(path, "w") as FH:
       FH.write(json.dumps(self.settings))

@@ -26,8 +26,9 @@ int run(float *angle, float *scale, float *t_x, float *t_y, float *c_x, float *c
 	InitGraphics();
 	CCamera* cam = StartCamera(MAIN_TEXTURE_WIDTH, MAIN_TEXTURE_HEIGHT,30,1,do_argb_conversion);
 
-	GfxTexture textures[1];
+	GfxTexture textures[2];
 	textures[0].Create(MAIN_TEXTURE_WIDTH, MAIN_TEXTURE_HEIGHT);
+        textures[1].Create(10,10);
 
 	printf("Running frame loop\n");
 

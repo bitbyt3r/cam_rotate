@@ -4,6 +4,8 @@ import socket
 from flask import Flask, send_from_directory, request, render_template
 import threading
 
+speed = 0
+
 class SpeedServer:
   def __init__(self, callback):
     self.callback = callback
@@ -14,12 +16,13 @@ class SpeedServer:
     print("Started speed server thread.")
 
   def run(self):
+    global speed
     print("Running speed server")
     while True:
       try:
         data, addr = self.s.recvfrom(1024)
-        num = float(data)
-        self.callback(num)
+        speed = float(data)
+        self.callback(speed)
       except:
         pass
 
@@ -42,6 +45,10 @@ class ConfigServer:
   def run(self):
     print("Running config server")
     app = Flask(__name__, template_folder="./html")
+
+    @app.route("/pitch", methods=['GET'])
+    def pitch():
+        return str(speed / float(self.settings['maxspeed'][0]))
 
     @app.route("/", methods=['GET', 'POST'])
     def index():

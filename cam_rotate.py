@@ -26,7 +26,6 @@ def speed_callback(num):
   scaled = min(scaled, max_step)
   speed = speed*0.5
   speed += scaled*0.5
-  print(num)
 
 def config_callback(configuration):
   print("Updating config")

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "rotator.h"
+#include "audio.h"
 
 extern "C"
 {
@@ -18,6 +19,7 @@ extern "C"
                 angle = 0.f;
                 printf("Starting Draw Thread...\n");
                 draw_thread = std::thread(&Window::background, this);
+                //init_audio();
                 return 0;
             }
             

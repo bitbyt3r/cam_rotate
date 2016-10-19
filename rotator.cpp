@@ -8,8 +8,8 @@
 #include "graphics.h"
 #include <math.h>
 
-#define MAIN_TEXTURE_WIDTH 512
-#define MAIN_TEXTURE_HEIGHT 512
+#define MAIN_TEXTURE_WIDTH 1024
+#define MAIN_TEXTURE_HEIGHT 1024
 
 #define SCREEN_WIDTH 1920.f
 #define SCREEN_HEIGHT 1080.f
@@ -19,15 +19,20 @@ char tmpbuff[MAIN_TEXTURE_WIDTH*MAIN_TEXTURE_HEIGHT*4];
 //entry point
 int run(float *angle, float *scale, float *t_x, float *t_y, float *c_x, float *c_y)
 {
+	printf("start\n");
 	//should the camera convert frame data from yuv to argb automatically?
 	bool do_argb_conversion = true;
+	printf("startb\n");
 
 	//init graphics and the camera
 	InitGraphics();
-	CCamera* cam = StartCamera(MAIN_TEXTURE_WIDTH, MAIN_TEXTURE_HEIGHT,30,1,do_argb_conversion);
+	printf("startc\n");
+	CCamera* cam = StartCamera(MAIN_TEXTURE_WIDTH, MAIN_TEXTURE_HEIGHT,10,1,do_argb_conversion);
+	printf("startd\n");
 
 	GfxTexture textures[2];
 	textures[0].Create(MAIN_TEXTURE_WIDTH, MAIN_TEXTURE_HEIGHT);
+	printf("starte\n");
         textures[1].Create(10,10);
 
 	printf("Running frame loop\n");

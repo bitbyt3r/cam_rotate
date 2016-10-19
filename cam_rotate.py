@@ -21,14 +21,17 @@ def speed_callback(num):
     if 'reverse' in config['check']:
       num *= -1
   max_step = 6.282 / float(config['fpr'][0])
-  scaled = (num / float(config['maxspeed'][0])) * (6.282 / float(config['fpr'][0]))
+  scaled = (num / float(config['maxspeed'][0])) * max_step
+  scaled = max(scaled, max_step*-1)
+  scaled = min(scaled, max_step)
   speed = speed*0.5
   speed += scaled*0.5
+  print(num)
 
 def config_callback(configuration):
   print("Updating config")
   global config
-  config.update(configuration)
+  config = dict(configuration)
   print(config)
   scale = ctypes.c_float()
   scale.value = float(config['scale'][0])

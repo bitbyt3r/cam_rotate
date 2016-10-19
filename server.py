@@ -34,8 +34,6 @@ class ConfigServer:
     if not self.settings:
       self.settings = {"icx": ["0.5",], "scy": ["0.5",], "fpr": ["24",], "scale": ["1",], "fps": ["30",], "icy": ["0.5",], "maxspeed": ["50",], "scx": ["0.5",], "check": ["",]}
     self.writeback("./settings.json")
-    print("Setting new settings")
-    print(self.settings)
     self.callback(self.settings)
     self.thread = threading.Thread(target=self.run)
     self.thread.start()
@@ -49,6 +47,9 @@ class ConfigServer:
     def index():
       if request.method == 'POST':
         self.settings = dict(request.form)
+        if not 'check' in self.settings.keys():
+          self.settings['check'] = []
+        print(self.settings)
         self.writeback("./settings.json")
         self.callback(request.form)
       return render_template("index.html", data=self.settings)

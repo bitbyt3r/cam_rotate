@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import os
 import json
 import ctypes
 import time
@@ -14,18 +15,25 @@ i.value = 1
 config = {}
 
 speed = 0
+musicavg = 0
 
 def speed_callback(num):
   global speed
+  global musicavg
   if 'check' in config.keys():
     if 'reverse' in config['check']:
       num *= -1
   max_step = 6.282 / float(config['fpr'][0])
   scaled = (num / float(config['maxspeed'][0])) * max_step
+  musicspeed = max(-1, min(1, (num / float(config['maxspeed'][0]))))
+  musicavg *= 0.9
+  musicavg += musicspeed*0.1
   scaled = max(scaled, max_step*-1)
   scaled = min(scaled, max_step)
   speed = speed*0.5
   speed += scaled*0.5
+  with open("/tmp/pitch", "w") as PITCHFH:
+    PITCHFH.write(str(musicavg))
 
 def config_callback(configuration):
   print("Updating config")
@@ -46,6 +54,11 @@ def config_callback(configuration):
 
 speedServer = server.SpeedServer(speed_callback)
 configServer = server.ConfigServer(config_callback)
+
+with open("/tmp/pitch", "w") as PITCHFH:
+  PITCHFH.write("0.0")
+
+os.system("xwax -a default &")
 
 while True:
   time.sleep(1/float(config['fps'][0]))

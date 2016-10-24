@@ -1,8 +1,10 @@
 #!/usr/bin/python
 import os
+import glob
 import json
 import ctypes
 import time
+import usb
 import server
 
 drawLib = ctypes.cdll.LoadLibrary("./draw.so")
@@ -58,9 +60,34 @@ configServer = server.ConfigServer(config_callback)
 with open("/tmp/pitch", "w") as PITCHFH:
   PITCHFH.write("0.0")
 
-os.system("xwax -a default &")
+mounter = usb.USBDriveMounter()
+mounter.start_monitor()
+mounter.mount_all()
+
+song = ''
+
+for filename in glob.iglob('/mnt/**', recursive=True):
+  print(filename)
+  if "wav" in filename or "mp3" in filename:
+    song = os.path.join('/mnt', filename)
+if song:
+  os.system("xwax -a default -p {} &".format(song))
+else:
+  os.system("xwax -a default -p {} &".format('/home/mark25/test.wav'))
 
 while True:
   time.sleep(1/float(config['fps'][0]))
   i.value += speed
   drawLib.Draw(window, i)
+  if mounter.poll_changes():
+    song = ''
+    mounter.mount_all()
+    os.system("pkill xwax")
+    for filename in glob.iglob('/mnt/**', recursive=True):
+      print(filename)
+      if "wav" in filename or "mp3" in filename:
+        song = os.path.join('/mnt', filename)
+    if song:
+      os.system("xwax -a default -p {} &".format(song))
+    else:
+      os.system("xwax -a default -p {} &".format('/home/mark25/test.wav'))

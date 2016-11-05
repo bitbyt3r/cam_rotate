@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Display Webcam Stream</title>
+<style>
+  #videoElement {
+    width: 1920px;
+    transform: rotate(45deg);
+    vertical-align: middle;
+  }
+</style>
+</head>
+                               
+<body>
+  <div id="container">
+    <video autoplay="true" id="videoElement">
+                                        
+    </video>
+  </div>
+  <script>
+    console.log("Testing");
+    var video = document.querySelector("#videoElement");
+                                
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+                                               
+    if (navigator.getUserMedia) {       
+      navigator.getUserMedia({video: true}, handleVideo, videoError);
+    }
+                                                     
+    function handleVideo(stream) {
+      video.src = window.URL.createObjectURL(stream);
+    }
+                                                          
+    function videoError(e) {
+    }
+  </script>
+</body>
+</html>

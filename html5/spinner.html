@@ -2,12 +2,32 @@
 <head>
 <title>Image Spinner</title>
 <script type="text/javascript">
-var ws = new WebSocket("ws://localhost:8080/");
+var ws;
+startConnection = function() {
+  console.log("Opening websocket connection...");
+  ws = new WebSocket("ws://localhost:8080/");
+  
+  ws.onmessage = function (event) {
+    var data = JSON.parse(event.data);
+    if (data.type == "speed") {
+      setspeed = data.speed;
+      console.log(data);
+      console.log("Speed set to " + setspeed);
+    }
+  };
+  
+  ws.onclose = function(){
+    console.log("Lost websocket connection...");
+    setTimeout(function(){startConnection()}, 5000);
+  };
+}
+
+startConnection();
 
 var speed = 1;
 var setspeed = 1;
 var angle = 0;
-var accel = 0.01;
+var accel = 0.05;
 var fps = 24;
 var select = true;
 var running = true;
@@ -60,19 +80,10 @@ document.onkeypress = function(event) {
     fps = fps - 1;
   }
 }
-
-ws.onmessage = function (event) {
-  var data = JSON.parse(event.data);
-  if (data.type == "speed") {
-    setspeed = data.speed;
-    console.log(data);
-    console.log("Speed set to " + setspeed);
-  }
-}
 </script>
 </head>
-<body>
-<div id="spinner" style="position: absolute; left: 0, top: 0;"></div>
+<body style="background-color: black; overflow: hidden;">
+<div id="spinner" style="position: absolute; left: 50%, top: 50%; vertical-align:middle;"></div>
 <div id="crosshair" style="visibility: hidden">+</div>
 <script type="text/javascript" src="../webcam.js"></script>
 <script language="JavaScript">
